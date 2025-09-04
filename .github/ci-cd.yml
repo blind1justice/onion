@@ -45,13 +45,13 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H $IP_ADDRES >> ~/.ssh/known_hosts
-          rsync -avz --exclude=".github" --exclude=".env" ./ root@$IP_ADDRES:/var/pipeline-app/
+          rsync -avz --exclude=".github" --exclude=".env" ./ root@$IP_ADDRES:/var/practice-app/
 
       # Step 3: Restart the application
       - name: Restart Application
         run: |
           ssh -i ~/.ssh/id_rsa root@$IP_ADDRES << EOF
-            cd /var/pipeline-app/
+            cd /var/practice-app/
             docker compose down
             docker compose up -d --build
             docker image prune -f
@@ -62,7 +62,7 @@ jobs:
       - name: Apply Migrations
         run: |
           ssh -i ~/.ssh/id_rsa root@$IP_ADDRES << EOF
-            cd /var/pipeline-app/
+            cd /var/practice-app/
             docker compose exec web alembic upgrade head
           EOF
 
